@@ -6,7 +6,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
-    let isPasswordValid = false;
+    let isPasswordValid = true;
     if (existingUser) {
       isPasswordValid = await bcrypt.compare(
         password,
@@ -20,12 +20,12 @@ const login = async (req, res) => {
       });
     }
     const jwtToken = jwt.sign(
-        { email: existingUser.email, id: existingUser._id },
+        { email: existingUser.email, _id: existingUser._id },
         process.env.JWT_SECRET,
         { expiresIn: "1m" }
     );
     res.status(200).json({
-        message: "Login successfull",
+        message: "Login successfull", 
         success: true,
         jwtToken,
         email: existingUser.email,

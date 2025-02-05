@@ -4,14 +4,15 @@ require('dotenv').config();
 const connectToDB = require('./models/db');
 const cors = require('cors');   
 const bodyParser = require('body-parser');  
-const router = require('./routes/authRouters');
-
+const authRouter = require('./routes/authRoutes');
+const productRouter = require('./routes/productRoutes')
 
 app.use(cors({
 
 }));
 app.use(bodyParser.json());
-app.use('/auth', router)
+app.use('/auth', authRouter);
+app.use('/products', productRouter);
 
 const PORT = process.env.PORT || 8080;
 

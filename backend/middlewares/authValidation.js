@@ -7,7 +7,7 @@ const signupValidation = (req, res, next) => {
     password: JOI.string().min(4).max(30).required(),
   });
   const { error } = schema.validate(req.body);
-  if (error) return res.status(400).json({ message: "Bad request", error });
+  if (error) return res.status(400).json({ message: "Signup Invalid", error });
   next();
 };
 
@@ -17,7 +17,7 @@ const loginValidation = (req, res, next) => {
     password: JOI.string().min(4).max(30).required(),
   });
   const { error } = schema.validate(req.body);
-  if (error) return req.status(400).json({ message: "Bad request", error });
+  if (error) return res.status(400).json({ message: "Login Invalid", error });
   next();
 };
 
