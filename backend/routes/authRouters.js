@@ -1,9 +1,10 @@
-const router = require('express').Router();
+const { login, signup } = require("../controllers/authControllers");
+const { loginValidation,  signupValidation} = require("../middlewares/authValidation");
 
-router.get('/login', (req, res) => {
-    res.send('Login page route');
-});
+const router = require("express").Router();
 
+router.post("/login", loginValidation, login);
 
+router.post("/signup", signupValidation, signup);
 
 module.exports = router;
