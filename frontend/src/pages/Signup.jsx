@@ -31,11 +31,10 @@ const Signup = () => {
         handleSuccess(result.message);
 
         handleRedirection("Redirecting to login page");
-        
 
         setTimeout(() => {
-            navigate("/login")
-        }, 5500);
+          navigate("/login");
+        }, 2000);
       } else {
         handleError(result.message);
       }

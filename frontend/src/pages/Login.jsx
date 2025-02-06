@@ -3,49 +3,49 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleSuccess, handleError, handleRedirection } from "../utilities";
 
-
 const Login = () => {
-    const [loginInfo, setLoginInfo] = useState({
-        email: "",
-        password: "",
+  const [loginInfo, setLoginInfo] = useState({
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    setLoginInfo({ ...loginInfo, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!loginInfo.email || !loginInfo.password)
+      handleError("Please fill all the fields");
+    try {
+      const url = "http://localhost:8080/auth/login";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginInfo),
       });
-      const navigate = useNavigate();
-      const handleChange = (e) => {
-        setLoginInfo({ ...loginInfo, [e.target.name]: e.target.value });
-      };
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!loginInfo.email || !loginInfo.password)
-          handleError("Please fill all the fields");
-        try {
-          const url = "http://localhost:8080/auth/login";
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(loginInfo),
-          });
-          const result = await response.json();
-          if (result.success) {
-            handleSuccess(result.message);
-            handleRedirection("Redirecting to home page");
-            localStorage.setItem("Token", result.token);
-            localStorage.setItem("Logged in User", JSON.stringify(result.user));
-            setTimeout(() => {
-                navigate("/home")
-            }, 5500);
-          } else {
-            handleError(result.message);
-          }
-        } catch (error) {
-          handleError(error.message);
-          console.log(error);
-        }
-      };
-      useEffect(() => {
-        // console.log(loginInfo);
-      }, [loginInfo]);
+      const result = await response.json();
+      if (result.success) {
+        console.log(result);
+        handleSuccess(result.message);
+        handleRedirection("Redirecting to home page");
+        localStorage.setItem("Token", result.jwtToken);
+        localStorage.setItem("Logged in User", JSON.stringify(result.name));
+        setTimeout(() => {
+          navigate("/home");
+        }, 2000);
+      } else {
+        handleError(result.message);
+      }
+    } catch (error) {
+      handleError(error.message);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    // console.log(loginInfo);
+  }, [loginInfo]);
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -56,7 +56,12 @@ const Login = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" onSubmit={handleSubmit} className="space-y-6">
+          <form
+            action="#"
+            method="POST"
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
             <div>
               <label
                 htmlFor="email"
@@ -84,7 +89,6 @@ const Login = () => {
                 >
                   Password
                 </label>
-                
               </div>
               <div className="mt-2">
                 <input
@@ -101,7 +105,7 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full cursor-pointer justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Log in
               </button>
@@ -110,7 +114,8 @@ const Login = () => {
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Don't have an account?{" "}
-            <Link to="/login"
+            <Link
+              to="/login"
               href="#"
               className="font-semibold text-indigo-600 hover:text-indigo-500"
             >
@@ -118,7 +123,7 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        <ToastContainer/>
+        <ToastContainer />
       </div>
     </>
   );
